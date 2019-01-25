@@ -24,27 +24,67 @@ function beat_ring(beat, cycle_length, fraction, offset, radius, sound) {
   }
 }
 
+var soundDict = {};
+
+var sound_files = ['anna1', 'anna2', 'anna3', 'anna4', 'anna5']
 
 function preload() {
   soundFormats('mp3', 'ogg');
-  sound1 = loadSound('data/anna4.ogg');
-  sound1.playMode('restart')
   
-  sound2 = loadSound('data/anna3.ogg');
-  sound2.playMode('restart')
+  for(var i = 0; i < sound_files.length; i++) {
+    soundDict[sound_files[i]] = loadSound('data/' + sound_files[i] + '.ogg');
+    soundDict[sound_files[i]].playMode('restart')
+  }  
 }
+
+var speed = 5;
+var speedMin = 0.5;
+var speedMax = 10;
+var speedStep = 0.1;
+
+var beats = 12;
+var beatsMin = 2;
+var beatsMax = 32;
+
+var period1 = 3;
+var period1Min = 1;
+var period1Max = 32;
+
+var period2 = 4;
+var period2Min = 1;
+var period2Max = 32;
+
+var offset1 = 0;
+var offset1Min = 0;
+var offset1Max = 32;
+
+var offset2 = 0;
+var offset2Min = 0;
+var offset2Max = 32;
+
+
+var sound_file1 = sound_files 
+var sound_file2 = sound_files
+
 
 function setup() {
   createCanvas(500, 500);
   
   strokeWeight(3);
-  frameRate(5);
+  
   background(255);
+  smooth();
+  var gui = createGui("MAIN");
+  gui.addGlobals('speed', 'beats', 
+                 'sound_file1', 'sound_file2', 
+                 'period1', 'period2',
+                 'offset1', 'offset2');
 }
 
 function draw() {
-  
+  frameRate(speed);
+  background(255);
   translate(width/2, height/2);
-  beat_ring(frameCount, 8, 3, 1, 170, sound1);
-  beat_ring(frameCount, 8, 5, 0, 100, sound2);
+  beat_ring(frameCount, beats, period1, offset1, 170, soundDict[sound_file1]);
+  beat_ring(frameCount, beats, period2, offset2, 100, soundDict[sound_file2]);
 }
