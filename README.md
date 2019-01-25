@@ -9,3 +9,4 @@ A simple tool to practice polyrhythms. [Click here](https://erniejunior.github.i
 * A 'Save' feature
 * Switch to [dat.GUI](https://github.com/dataarts/dat.gui)
 * Recording own samples
+* Add stereo effect to match the sides of the indicators
