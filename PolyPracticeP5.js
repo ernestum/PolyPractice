@@ -1,42 +1,46 @@
 
-function beat_ring(beat, cycle_length, fraction, offset, radius, sound) {
+function beat_ring(beat, cycle_length, fraction, offset, radius, sound, c) {
   beat = beat % cycle_length;
   noFill();
+  stroke(c);
+  strokeWeight(3);
   ellipse(0, 0, radius*2, radius*2);
-  for (var i = 0; i < cycle_length; i++) {
-    if (i == beat) { 
-      stroke(255, 0, 0);
-    } else { 
-      stroke(0);
-    }
-    if (i % fraction == offset) { 
-      fill(0);
-    } else { 
-      noFill();
-    }
-    if (i == beat && i % fraction == offset) {
-      sound.play();
+  var playingNow = false;
+  for (var i = offset; i < cycle_length + offset; i++) {
+    var isLoadedBeat = (i-offset) % fraction == 0;
+    var isCurrentBeat = (i%cycle_length) == beat
+    
+    if (isCurrentBeat) { stroke(0); } else { noStroke(); }
+    if (isLoadedBeat) { fill(c); } else { noFill(); }
+    
+    var r = 30;
+    if (isLoadedBeat && isCurrentBeat) {
+      playingNow = true;
+      if(!mute)
+        sound.play();
     }
     var alpha = map(i, 0, cycle_length, 0, TWO_PI) - HALF_PI;
     var x = cos(alpha) * radius;
     var y = sin(alpha) * radius;
-    ellipse(x, y, radius/5, radius/5);
+    ellipse(x, y, r, r);
   }
+  return playingNow;
 }
 
 var soundDict = {};
 
-var sound_files = ['anna1', 'anna2', 'anna3', 'anna4', 'anna5']
+var soundFiles = ['anna1', 'anna2', 'anna3', 'anna4', 'anna5']
 
 function preload() {
   soundFormats('mp3', 'ogg');
   
-  for(var i = 0; i < sound_files.length; i++) {
-    soundDict[sound_files[i]] = loadSound('data/' + sound_files[i] + '.ogg');
-    soundDict[sound_files[i]].playMode('restart')
+  for(var i = 0; i < soundFiles.length; i++) {
+    soundDict[soundFiles[i]] = loadSound('data/' + soundFiles[i] + '.ogg');
+    soundDict[soundFiles[i]].playMode('restart')
   }  
 }
 
+/// Main control
 var speed = 5;
 var speedMin = 0.5;
 var speedMax = 10;
@@ -46,45 +50,62 @@ var beats = 12;
 var beatsMin = 2;
 var beatsMax = 32;
 
+var mute = false;
+var clap_indicators = true;
+
+
+/// Loop 1 Control
+var color1 = '#1f78b4'
+
 var period1 = 3;
 var period1Min = 1;
 var period1Max = 32;
 
-var period2 = 4;
-var period2Min = 1;
-var period2Max = 32;
-
 var offset1 = 0;
 var offset1Min = 0;
-var offset1Max = 32;
+var offset1Max = 16;
+
+var soundFile1 = soundFiles
+
+/// Loop 2 Control
+var color2 = '#33a02c'
+var period2 = 4;
+var period2Min = 1;
+var period2Max = 16;
 
 var offset2 = 0;
 var offset2Min = 0;
 var offset2Max = 32;
-
-
-var sound_file1 = sound_files 
-var sound_file2 = sound_files
+ 
+var soundFile2 = soundFiles
 
 
 function setup() {
-  createCanvas(500, 500);
-  
-  strokeWeight(3);
+  createCanvas(1000, 500);
   
   background(255);
   smooth();
-  var gui = createGui("MAIN");
-  gui.addGlobals('speed', 'beats', 
-                 'sound_file1', 'sound_file2', 
-                 'period1', 'period2',
-                 'offset1', 'offset2');
+  var mainGui = createGui("MAIN", 500-100, 500);
+  mainGui.addGlobals('speed', 'beats', 'mute', 'clap_indicators')
+  
+  var l1Gui = createGui("LOOP 1", 20, 500);
+  l1Gui.addGlobals('color1', 'period1', 'offset1', 'soundFile1');
+  
+  var l2Gui = createGui("LOOP 2", width - 200, 500);
+  l2Gui.addGlobals('color2', 'period2', 'offset2', 'soundFile2');  
 }
 
 function draw() {
   frameRate(speed);
   background(255);
   translate(width/2, height/2);
-  beat_ring(frameCount, beats, period1, offset1, 170, soundDict[sound_file1]);
-  beat_ring(frameCount, beats, period2, offset2, 100, soundDict[sound_file2]);
+  var leftIsFiring = beat_ring(frameCount, beats, period1, offset1, 170, soundDict[soundFile1], color1);
+  var rightIsFiring = beat_ring(frameCount, beats, period2, offset2, 100, soundDict[soundFile2], color2);
+  
+  noFill();
+  if(leftIsFiring && clap_indicators) { stroke(color1); } else { noStroke(); }
+  ellipse(-width/3, 0, 100, 100);
+  
+  if(rightIsFiring && clap_indicators) { stroke(color2); } else { noStroke(); }
+  ellipse(width/3, 0, 100, 100);
 }
