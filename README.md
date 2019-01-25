@@ -13,3 +13,4 @@ A simple tool to practice polyrhythms. [Click here](https://erniejunior.github.i
 * Add support for [Web MIDI](https://github.com/djipco/webmidi)
 * More than two tracks
 * More than one beat-disk to practice rhythmic changes
+* Automatic computation of numer of beats in cycle based on number on armed beats on the cycles
