@@ -26,11 +26,11 @@ function beat_ring(beat, cycle_length, fraction, offset, radius, sound) {
 
 
 function preload() {
-  soundFormats('mp3');
-  sound1 = loadSound('data/anna4.mp3');
+  soundFormats('mp3', 'ogg');
+  sound1 = loadSound('data/anna4.ogg');
   sound1.playMode('restart')
   
-  sound2 = loadSound('data/anna3.mp3');
+  sound2 = loadSound('data/anna3.ogg');
   sound2.playMode('restart')
 }
 
