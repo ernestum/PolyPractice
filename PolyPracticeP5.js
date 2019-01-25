@@ -16,8 +16,9 @@ function beat_ring(beat, cycle_length, fraction, offset, radius, sound, c) {
     var r = 30;
     if (isLoadedBeat && isCurrentBeat) {
       playingNow = true;
-      if(!mute)
+      if(!mute) {
         sound.play();
+      }
     }
     var alpha = map(i, 0, cycle_length, 0, TWO_PI) - HALF_PI;
     var x = cos(alpha) * radius;
@@ -43,7 +44,7 @@ function preload() {
 /// Main control
 var speed = 5;
 var speedMin = 0.5;
-var speedMax = 10;
+var speedMax = 20;
 var speedStep = 0.1;
 
 var beats = 12;
@@ -67,6 +68,11 @@ var offset1Max = 16;
 
 var soundFile1 = soundFiles
 
+var volume1 = 1;
+var volume1Min = 0;
+var volume1Max = 1;
+var volume1Step = 0.01;
+
 /// Loop 2 Control
 var color2 = '#33a02c'
 var period2 = 4;
@@ -79,6 +85,10 @@ var offset2Max = 32;
  
 var soundFile2 = soundFiles
 
+var volume2 = 1;
+var volume2Min = 0;
+var volume2Max = 1;
+var volume2Step = 0.01;
 
 function setup() {
   createCanvas(1000, 500);
@@ -89,16 +99,18 @@ function setup() {
   mainGui.addGlobals('speed', 'beats', 'mute', 'clap_indicators')
   
   var l1Gui = createGui("LOOP 1", 20, 500);
-  l1Gui.addGlobals('color1', 'period1', 'offset1', 'soundFile1');
+  l1Gui.addGlobals('color1', 'period1', 'offset1', 'soundFile1', 'volume1');
   
   var l2Gui = createGui("LOOP 2", width - 200, 500);
-  l2Gui.addGlobals('color2', 'period2', 'offset2', 'soundFile2');  
+  l2Gui.addGlobals('color2', 'period2', 'offset2', 'soundFile2', 'volume2');  
 }
 
 function draw() {
   frameRate(speed);
   background(255);
   translate(width/2, height/2);
+  soundDict[soundFile1].setVolume(volume1)
+  soundDict[soundFile2].setVolume(volume2)
   var leftIsFiring = beat_ring(frameCount, beats, period1, offset1, 170, soundDict[soundFile1], color1);
   var rightIsFiring = beat_ring(frameCount, beats, period2, offset2, 100, soundDict[soundFile2], color2);
   
