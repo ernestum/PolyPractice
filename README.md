@@ -11,3 +11,5 @@ A simple tool to practice polyrhythms. [Click here](https://erniejunior.github.i
 * Recording own samples
 * Add stereo effect to match the sides of the indicators
 * Add support for [Web MIDI](https://github.com/djipco/webmidi)
+* More than two tracks
+* More than one beat-disk to practice rhythmic changes
