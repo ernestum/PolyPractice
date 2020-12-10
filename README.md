@@ -1,6 +1,6 @@
 # PolyPractice
 
-A simple tool to practice polyrhythms. [Click here](https://erniejunior.github.io/PolyPractice/) to try it out.
+A simple tool to practice polyrhythms. [Click here](https://ernestum.github.io/PolyPractice/) to try it out.
 
 ## Planned Features
 
